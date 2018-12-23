@@ -42,10 +42,10 @@
             <div class="col-sm-6 game-grid">
                 <div class="row text-center">
                     <div class="col-sm-12">
-                        <button class="btn btn-dark btn-lg" id="new-game-button">
-                            <span class="fa fa-ok"></span>New Game</button>
+                        <h5 id="start-text"></h5>
                     </div>
                 </div>
+
                 <div class="row text-center">
                     <div class="col-sm-12" id="word-letters-div">
                     </div>
@@ -69,6 +69,12 @@
                     <div class="col-sm-12" id="guessed-letters-div">
                     </div>
                 </div>
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <button class="btn btn-dark btn-lg" id="new-game-button">
+                            <span class="fa fa-ok"></span>New Game</button>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -87,13 +93,13 @@
             //array of words
             var words = ["nirvana", "soundgarden", "weezer", "radiohead", "oasis", "primus"]
             var wins = 0;
+            var losses = 0;
             var remainingGuesses = 10;
             var imageIndex = 0;
             var correctGuesses = 0;
             var wordLength = 0;
             var word = [];
             var filteredWord = [];
-
 
             $('#new-game-button').on('click', function () {
 
@@ -104,6 +110,7 @@
                 imageIndex = 0;
                 wordLength = word.length;
                 correctGuesses = 0;
+                wins = 0;
 
 
 
@@ -113,9 +120,7 @@
                 $('#remaining-guesses').text(remainingGuesses);
                 $("#img-gallows").attr("src", "./assets/images/" + imageIndex + ".jpg");
                 $("#outcome-text").empty();
-
-
-
+                $('#start-text').text("Enter a letter to play!");
 
                 word.split('').map(letter => {
                     var letterDiv = $("<div>");
@@ -125,17 +130,16 @@
                 });
             });
 
-            var userGuess = "";
 
-                document.onkeyup = function (event) {
-                    
-                    var guess = event.key;
-                    var letterDiv = $("div").find(`[data-letter='${guess}']`);
+            document.onkeyup = function (event) {
 
-                    if (filteredWord.length > 0 && remainingGuesses > 0) {
-                        filteredWord = filteredWord.filter(function(value, index, arr) {
-                            return value != guess;
-                        });
+                var guess = event.key;
+                var letterDiv = $("div").find(`[data-letter='${guess}']`);
+
+                if (filteredWord.length > 0 && remainingGuesses > 0) {
+                    filteredWord = filteredWord.filter(function (value, index, arr) {
+                        return value != guess;
+                    });
 
                     if (letterDiv.attr('data-letter') == guess) {
 
@@ -143,14 +147,18 @@
 
                         if (filteredWord.length == 0) {
                             $("#outcome-text").text("YOU WON!!!!");
+
+                            wins++;
+                            $("#wins").text(wins);
+
                         }
                     }
                     else {
                         addIncorrectGuess(guess);
                     }
-                    };
-                    
                 };
+
+            };
 
 
 
