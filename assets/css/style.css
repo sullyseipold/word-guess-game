@@ -1,0 +1,33 @@
+.game-grid {
+    border: 2px solid black;
+}
+
+#img-gallows {
+    margin: 10px auto;
+    width: 50%; 
+}
+
+.page-header {
+    text-align: center;
+}
+
+#word-letters-div #guessed-letters-div{
+    margin: 20px auto;
+}
+
+.game-word-div {
+    /* float: left; */
+    border: 2px solid black;
+    margin: 0px 5px;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+}
+
+#new-game-button {
+    margin: 10px;
+}
+
+#outcome-text {
+    font-size: 900%;
+}
