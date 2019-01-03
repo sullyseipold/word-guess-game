@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <!-- Load Jquery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <!-- Load Cloudflare for jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -18,6 +18,8 @@
     <!-- Load Bootsrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+        <script src="./assets/javascript/game.js"></script>
 
     <link rel="stylesheet" href="./assets/css/reset.css" type="text/css">
     <link rel="stylesheet" href="./assets/css/style.css" type="text/css">
@@ -36,13 +38,31 @@
         </div>
         <div class="row text-center">
             <div class="col-sm-6 game-grid">
-                <h3>Gallows</h3>
-                <img src="./assets/images/0.jpg" id="img-gallows">
+                <div class="row">
+                    <div class="col-sm-12">
+                            <h3>Gallows</h3>
+                            <img src="./assets/images/0.jpg" id="img-gallows">
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="col-sm-3">
+                                <h5>Wins</h5>
+                        </div>
+                        <div class="col-sm-3 text-left">
+                                <h5 id="wins"></h5>
+                        </div>
+                        <div class="col-sm-3">
+                                <h5>Losses</h5>
+                        </div>
+                        <div class="col-sm-3 text-left">
+                                <h5 id="losses"></h5>
+                        </div>
+                    </div>
+                
             </div>
             <div class="col-sm-6 game-grid">
                 <div class="row text-center">
                     <div class="col-sm-12">
-                        <h5 id="start-text"></h5>
                     </div>
                 </div>
 
@@ -57,26 +77,27 @@
                     </div>
                 </div>
                 <div class="row text-center">
-                    <div class="col-sm-12">
-                        <h2>Guessed Letters</h2>
-                    </div>
-                </div>
-                <div class="row text-center">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" id="available-letters-div">
+                        <h2 class="letters-h2" id="av-letters-h2">Available Letters</h2>
+                        <h2 class="letters-h2" id="gd-letters-h2">Guessed Letters</h2>
                     </div>
                 </div>
                 <div class="row text-center">
                     <div class="col-sm-12" id="guessed-letters-div">
                     </div>
                 </div>
-                <div class="row text-center">
-                    <div class="col-sm-12">
+
+                <div class="row btn-div">
+                    <div class="col-sm-6">
                         <button class="btn btn-dark btn-lg" id="new-game-button">
                             <span class="fa fa-ok"></span>New Game</button>
                     </div>
+                    <div class="col-sm-6">
+                            <button class="btn btn-dark btn-lg" id="next-word-button">
+                                <span class="fa fa-ok"></span>Next Word</button>
+                        </div>
                 </div>
             </div>
-
         </div>
         <div class="row text-center">
             <div class="col-sm-12">
@@ -87,103 +108,9 @@
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            //array of words
-            var words = ["nirvana", "soundgarden", "weezer", "radiohead", "oasis", "primus"]
-            var wins = 0;
-            var losses = 0;
-            var remainingGuesses = 10;
-            var imageIndex = 0;
-            var correctGuesses = 0;
-            var wordLength = 0;
-            var word = [];
-            var filteredWord = [];
-
-            $('#new-game-button').on('click', function () {
-
-                var index = Math.floor(Math.random() * (words.length + 1));
-                word = words[index];
-                filteredWord = words[index].split('');
-                remainingGuesses = 10;
-                imageIndex = 0;
-                wordLength = word.length;
-                correctGuesses = 0;
-                wins = 0;
-
-
-
-                $('#word-letters-div').empty();
-                $('#guessed-letters-div').empty();
-                $('#wins-div').empty();
-                $('#remaining-guesses').text(remainingGuesses);
-                $("#img-gallows").attr("src", "./assets/images/" + imageIndex + ".jpg");
-                $("#outcome-text").empty();
-                $('#start-text').text("Enter a letter to play!");
-
-                word.split('').map(letter => {
-                    var letterDiv = $("<div>");
-                    letterDiv.addClass("game-word-div");
-                    letterDiv.attr("data-letter", letter);
-                    $('#word-letters-div').append(letterDiv);
-                });
-            });
-
-
-            document.onkeyup = function (event) {
-
-                var guess = event.key;
-                var letterDiv = $("div").find(`[data-letter='${guess}']`);
-
-                if (filteredWord.length > 0 && remainingGuesses > 0) {
-                    filteredWord = filteredWord.filter(function (value, index, arr) {
-                        return value != guess;
-                    });
-
-                    if (letterDiv.attr('data-letter') == guess) {
-
-                        letterDiv.text(guess);
-
-                        if (filteredWord.length == 0) {
-                            $("#outcome-text").text("YOU WON!!!!");
-
-                            wins++;
-                            $("#wins").text(wins);
-
-                        }
-                    }
-                    else {
-                        addIncorrectGuess(guess);
-                    }
-                };
-
-            };
-
-
-
-            function addIncorrectGuess(guess) {
-                var letterDiv = $("<div>");
-                letterDiv.addClass("game-word-div");
-                letterDiv.attr("data-letter", guess);
-                letterDiv.text(guess);
-                $('#guessed-letters-div').append(letterDiv);
-
-                remainingGuesses--;
-                $('#remaining-guesses').text(remainingGuesses);
-
-                imageIndex++;
-
-                if (imageIndex <= 10) {
-                    $("#img-gallows").attr("src", "./assets/images/" + imageIndex + ".jpg");
-                }
-                if (remainingGuesses === 0) {
-                    $("#outcome-text").text("YOU LOST!!!!");
-                }
-            };
-
-        });
-    </script>
+    <!-- <script type="text/javascript">
+        
+    </script> -->
 
 </body>
 

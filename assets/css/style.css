@@ -1,5 +1,19 @@
+body {
+    background: url('../images/497full-kurt-cobain.jpg');
+}
+
+
+.letters-h2 {
+    margin-bottom: 20px;
+}
+
+
+
 .game-grid {
+    padding-top: 10px;
     border: 2px solid black;
+    background: white;
+    opacity: .8;
 }
 
 #img-gallows {
@@ -9,25 +23,38 @@
 
 .page-header {
     text-align: center;
+    background: white;
+    opacity: .8;
 }
 
 #word-letters-div #guessed-letters-div{
     margin: 20px auto;
 }
 
-.game-word-div {
+.letter-box {
     /* float: left; */
     border: 2px solid black;
-    margin: 0px 5px;
+    margin: 2px 5px;
     display: inline-block;
     width: 35px;
     height: 35px;
 }
 
-#new-game-button {
-    margin: 10px;
+#new-game-button #next-word-button {
+    margin: 20px;
+}
+
+.btn-div {
+    margin-top: 10px;
 }
 
 #outcome-text {
     font-size: 900%;
+    color: red;
+}
+
+.guess-btn {
+    background: transparent;
+    border: none !important;
+    opacity: 0;
 }
