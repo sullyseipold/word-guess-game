@@ -8,7 +8,6 @@ $(document).ready(function () {
     var losses = 0;
     var remainingGuesses = 10;
     var imageIndex = 0;
-    var correctGuesses = 0;
     var wordLength = 0;
     var word = [];
 
@@ -56,13 +55,12 @@ $(document).ready(function () {
     newWord();
     populateGameBoard();
 
-    $('#new-game-button').on('click', function () {
+    $('#new-game-button').on('click', () =>{
 
-        remainingGuesses = 10;
         imageIndex = 0;
         wordLength = word.length;
-        correctGuesses = 0;
         wins = 0;
+        losses = 0;
 
 
         //clear game board
@@ -83,9 +81,8 @@ $(document).ready(function () {
         remainingGuesses = 10;
         imageIndex = 0;
         wordLength = word.length;
-        correctGuesses = 0;
 
-         //clear game board
+        //clear game board
         $(".letter-btn").remove();
         $(".guess-btn").remove();
         $('#word-letters-div').empty();
@@ -100,56 +97,37 @@ $(document).ready(function () {
     $(document).on("click", ".letter-btn", function () {
 
         var guessBtn = $(this);
-        var isCorrectGuess = false;
         var guess = $(this).attr("data-letter");
-        var isGameOver = false;
 
-        if (remainingGuesses > 0) {
+        if (imageIndex < 10) {
 
-            isCorrectGuess = isGuessCorrect(guess);
-            calculateRemainingGuesses();
-
+            if (isGuessCorrect(guess)) {
+                addCorrectGuess(guess);
+            }
+            else {
+                advanceGallowsImage();
+            }
         }
 
-        if (isCorrectGuess) {
-            addCorrectGuess(guess);
-
-        }
-        else {
-            advanceGallowsImage();
-        }
-        
         moveGuessedLetter(guessBtn);
 
-        if ((remainingGuesses == 0) && (filteredWord.length > 0)) {
+        if ((imageIndex == 10) && (filteredWord.length > 0)) {
             $("#outcome-text").text("YOU LOST!!!!");
             losses++;
             $('#losses').text(losses);
 
+            $(".guess-btn, .letter-btn").addClass("disabled");
+
         }
         else if (filteredWord.length == 0) {
             $("#outcome-text").text("YOU WON!!!!");
+
+            $(".guess-btn, .letter-btn").addClass("disabled");
             wins++;
             $('#wins').text(wins);
         }
 
     });
-
-
-    function addIncorrectGuess() {
-
-        if (remainingGuesses === 0) {
-            $("#outcome-text").text("YOU LOST!!!!");
-        }
-    };
-
-    function calculateRemainingGuesses() {
-        if (remainingGuesses > 0) {
-
-            remainingGuesses--;
-            $('#remaining-guesses').text(remainingGuesses);
-        }
-    };
 
     function advanceGallowsImage() {
 
@@ -178,11 +156,6 @@ $(document).ready(function () {
 
     };
 
-    function isWinningGuess() {
-        return filteredWord.length == 0;
-
-    };
-
     function moveGuessedLetter(guessedLetterBtn) {
 
         var guess = $(guessedLetterBtn).attr("data-letter");
@@ -198,10 +171,7 @@ $(document).ready(function () {
 
         $(guessedLetterBtn).animate({
             left: xt - xb, top: yt - yb
-        }, "normal",
-            function () {
-                $(guessedLetterBtn).attr("disabled");
-            });
+        }, "normal");
 
     };
 });

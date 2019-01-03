@@ -58,3 +58,8 @@ body {
     border: none !important;
     opacity: 0;
 }
+
+.disabled {
+    pointer-events: none;
+
+}
